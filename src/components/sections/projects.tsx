@@ -20,34 +20,28 @@ export function ProjectFace({ p, index, compact = false }: { p: Project; index: 
   return (
     <div className="flex h-full flex-col">
       <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/8 bg-ground-2">
-        <Image src={m.image} alt={`${p.name} 목업`} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover object-top" unoptimized />
+        <Image src={m.image} alt={`${p.name} 목업`} fill sizes="(max-width: 768px) 100vw, 25vw" className="object-cover object-top" unoptimized />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface to-transparent" />
-        <span className="lbl absolute left-4 top-4 rounded-full border border-white/12 bg-black/40 px-2.5 py-1 !text-[10px] text-ink-2 backdrop-blur-md">
-          {String(index + 1).padStart(2, "0")} · {p.period}
+        <span className="lbl absolute left-3 top-3 rounded-full border border-white/12 bg-black/40 px-2.5 py-1 !text-[10px] text-ink-2 backdrop-blur-md">
+          {String(index + 1).padStart(2, "0")} · {p.period.split(" ")[0]}
         </span>
         {p.featured && (
-          <span className="absolute right-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[.12em] text-white" style={{ background: m.accent }}>
+          <span className="absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[.12em] text-white" style={{ background: m.accent }}>
             FEATURED
           </span>
         )}
       </div>
-      <div className={cn("flex flex-1 flex-col p-5", compact && "p-4")}>
-        <h3 className={cn("font-semibold leading-[1.15] tracking-[-0.025em] text-ink", compact ? "text-[18px]" : "text-[22px]")}>
-          {p.name}
-        </h3>
-        <p className="mt-1 text-[13.5px] text-ink-2">{p.sub}</p>
-        {p.role && (
-          <p className="mt-2 text-[12.5px] font-medium" style={{ color: m.accent }}>
-            {p.role}
-          </p>
-        )}
-        <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
-          {p.stack.slice(0, compact ? 2 : 3).map((s) => (
+      <div className={cn("flex flex-1 flex-col p-4", compact && "p-4")}>
+        <h3 className="text-[17px] font-semibold leading-[1.2] tracking-[-0.02em] text-ink">{p.name}</h3>
+        <p className="mt-1 text-[13px] leading-[1.5] text-ink-2">{p.sub}</p>
+        {p.role && <p className="mt-1.5 line-clamp-1 text-[12px] text-ink-3">{p.role}</p>}
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-3">
+          {p.stack.slice(0, 2).map((s) => (
             <span key={s} className="chip !h-6 !px-2.5 !text-[11px]">
               {s}
             </span>
           ))}
-          {p.stack.length > 3 && <span className="chip !h-6 !px-2.5 !text-[11px] text-ink-3">+{p.stack.length - 3}</span>}
+          {p.stack.length > 2 && <span className="chip !h-6 !px-2.5 !text-[11px] text-ink-3">+{p.stack.length - 2}</span>}
         </div>
       </div>
     </div>
@@ -216,9 +210,9 @@ export function Projects() {
       title="운영 중인 제품을 끝까지 살려온 이력."
       lede="카드를 기울여 보고, 누르면 무엇을 · 왜 · 어떻게 고쳤는지와 저장소별 기여 지분이 펼쳐집니다. 모든 수치는 git log에서 직접 집계했습니다."
     >
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {projects.map((p, i) => (
-          <BlurFade key={p.id} inView delay={0.06 * (i % 3)} className="h-full">
+          <BlurFade key={p.id} inView delay={0.06 * (i % 4)} className="h-full">
             <HoloCard onClick={() => setOpen(p)} ariaLabel={`${p.name} 상세 열기`} className="h-full">
               {p.featured && <BorderBeam size={200} duration={9} colorFrom={mockups[p.id].accent} colorTo="#bf5af2" className="z-[5]" />}
               <ProjectFace p={p} index={i} />

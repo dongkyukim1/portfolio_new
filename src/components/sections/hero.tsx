@@ -56,9 +56,9 @@ export function Hero() {
           />
         </h1>
 
-        <div className={cn("reveal mt-4 flex items-center gap-2 text-[15px] text-ink-2 sm:text-[17px]", inClass && "in")} style={{ transitionDelay: "1050ms" }}>
-          <span>지금은</span>
-          <WordRotate words={profile.roles} className="font-semibold text-ink" duration={2400} />
+        <div className={cn("reveal mt-5 flex items-baseline gap-2.5", inClass && "in")} style={{ transitionDelay: "1050ms" }}>
+          <span className="lbl">Now</span>
+          <WordRotate words={profile.roles} className="text-[15px] font-semibold text-ink sm:text-[17px]" duration={2400} />
         </div>
 
         <WordReveal

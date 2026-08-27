@@ -25,11 +25,11 @@ export function SideProjects() {
                     <div aria-hidden className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-surface to-transparent" />
                   </div>
                   <div className="flex flex-1 flex-col p-4">
-                    <div className="lbl !text-[10px]">{s.stack}</div>
-                    <h3 className="mt-2 flex items-center gap-1.5 text-[17px] font-semibold tracking-[-0.02em] text-ink">
+                    <h3 className="flex items-center gap-1.5 text-[17px] font-semibold leading-[1.2] tracking-[-0.02em] text-ink">
                       {s.name} <ArrowUpRight className="size-3.5 text-ink-3" />
                     </h3>
-                    <p className="mt-2 line-clamp-4 text-[13px] leading-[1.65] text-ink-2">{s.body}</p>
+                    <p className="mt-1 line-clamp-1 text-[12px] text-ink-3">{s.stack}</p>
+                    <p className="mt-2 line-clamp-3 text-[13px] leading-[1.6] text-ink-2">{s.body}</p>
                   </div>
                 </div>
               </HoloCard>

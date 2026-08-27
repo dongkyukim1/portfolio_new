@@ -13,17 +13,10 @@ export function Metrics() {
     <section id="metrics" className="scroll-mt-24 border-t border-hairline bg-ground-2/60 py-[clamp(48px,7vw,88px)]">
       <div className="mx-auto max-w-[1080px] px-[22px]">
         <BlurFade inView>
-          <div className="panel grid grid-cols-2 overflow-hidden md:grid-cols-5">
+          <div className="lbl mb-4">By the numbers · 2024.07 – 2026.08</div>
+          <div className="panel grid grid-cols-2 gap-px overflow-hidden !bg-hairline md:grid-cols-5">
             {metrics.map((m, i) => (
-              <div
-                key={m.label}
-                className={cn(
-                  "px-5 py-6 md:px-6 md:py-7",
-                  i % 2 === 0 ? "border-r border-hairline md:border-r" : "md:border-r md:border-hairline",
-                  i >= 2 ? "border-t border-hairline md:border-t-0" : "",
-                  i === metrics.length - 1 && "md:!border-r-0",
-                )}
-              >
+              <div key={m.label} className={cn("bg-surface px-5 py-6 md:px-6 md:py-7", i === metrics.length - 1 && "col-span-2 md:col-span-1")}>
                 <div className="tabular text-[clamp(30px,4vw,40px)] font-semibold leading-none tracking-[-0.03em] text-ink">
                   <NumberTicker value={m.value} decimalPlaces={m.decimals ?? 0} delay={0.1 * i} className="text-ink" />
                   <span className="text-[0.55em] font-medium text-ink-3">{m.suffix}</span>
