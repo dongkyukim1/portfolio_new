@@ -331,7 +331,7 @@ body {
   background-position: var(--bgx) var(--bgy);
   mix-blend-mode: color-dodge;
   filter: brightness(.85) contrast(1.6) saturate(1.2);
-  opacity: calc(var(--o) * (0.35 + var(--fc) * 0.45));
+  opacity: calc(var(--o) * (0.18 + var(--fc) * 0.32));
   z-index: 3;
 }
 /* fine holographic foil stripes */
@@ -343,14 +343,17 @@ body {
   background-position: var(--bgx) var(--bgy), center;
   background-blend-mode: soft-light;
   mix-blend-mode: soft-light;
-  opacity: calc(var(--o) * 0.55);
+  opacity: calc(var(--o) * 0.32);
   z-index: 2;
 }
 /* specular glare following the pointer */
 .holo__glare {
   background-image: radial-gradient(farthest-corner circle at var(--px) var(--py), rgba(255,255,255,.55) 8%, rgba(255,255,255,.18) 28%, rgba(0,0,0,.35) 90%);
   mix-blend-mode: overlay;
-  opacity: calc(var(--o) * 0.9);
+  opacity: calc(var(--o) * 0.7);
   z-index: 4;
 }
 @media (prefers-reduced-motion: reduce) { .holo__shine, .holo__foil, .holo__glare { display: none; } }
+
+/* text zone stays legible under the holo layers */
+.holo__inner > div > div:last-child { position: relative; z-index: 1; }
