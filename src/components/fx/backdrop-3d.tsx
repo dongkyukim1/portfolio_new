@@ -19,31 +19,23 @@ const ACCENT = "#2997ff"
 const INDIGO = "#5e5ce6"
 const VIOLET = "#bf5af2"
 
-type Anchors = Record<string, { y: number; h: number }>
-
-function useAnchors(ids: string[]) {
-  const [a, setA] = useState<Anchors>({})
-  useEffect(() => {
-    const measure = () => {
-      const next: Anchors = {}
-      for (const id of ids) {
-        const el = document.getElementById(id)
-        if (!el) continue
-        const r = el.getBoundingClientRect()
-        next[id] = { y: r.top + scrollY, h: r.height }
-      }
-      setA(next)
-    }
-    measure()
-    const t = setTimeout(measure, 800)
-    addEventListener("resize", measure)
-    return () => {
-      clearTimeout(t)
-      removeEventListener("resize", measure)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  return a
+/**
+ * Pins its children to a DOM section: every frame it reads the section's on-screen rect and places the
+ * group where that section's centre currently is in world space. Robust to late layout shifts (images, fonts).
+ */
+function SectionAnchor({ id, x = 0, z = -5, children }: { id: string; x?: number; z?: number; children: React.ReactNode }) {
+  const g = useRef<THREE.Group>(null)
+  const el = useRef<HTMLElement | null>(null)
+  useFrame(({ camera }) => {
+    if (!el.current) el.current = document.getElementById(id)
+    const node = el.current
+    if (!node || !g.current) return
+    const r = node.getBoundingClientRect()
+    const centreOffsetPx = r.top + r.height / 2 - innerHeight / 2 // + below viewport centre
+    g.current.position.set(x, camera.position.y - centreOffsetPx / PX, z)
+    g.current.visible = r.bottom > -innerHeight && r.top < innerHeight * 2
+  })
+  return <group ref={g}>{children}</group>
 }
 
 /** camera.y tracks scroll; slight pointer parallax on x/y */
@@ -57,14 +49,14 @@ function Rig({ mouse }: { mouse: React.MutableRefObject<{ x: number; y: number }
   return null
 }
 
-function DataBars({ y }: { y: number }) {
+function DataBars() {
   const g = useRef<THREE.Group>(null)
   useFrame(({ clock }) => {
     if (g.current) g.current.rotation.y = -0.55 + Math.sin(clock.elapsedTime * 0.25) * 0.08
   })
   const bars = activity.bars
   return (
-    <group ref={g} position={[6.2, y, -4]} rotation={[0.2, -0.55, 0]}>
+    <group ref={g} rotation={[0.2, -0.55, 0]}>
       {bars.map((h, i) => {
         const bh = 0.3 + (h / 100) * 3.2
         return (
@@ -79,16 +71,16 @@ function DataBars({ y }: { y: number }) {
   )
 }
 
-function Panes({ y }: { y: number }) {
+function Panes() {
   const items = useMemo(
     () =>
       Array.from({ length: 7 }, (_, i) => ({
-        pos: [(i % 2 ? 1 : -1) * (5.2 + (i % 3) * 0.9), y + (i - 3) * 1.6, -5 - (i % 4) * 1.5] as [number, number, number],
+        pos: [(i % 2 ? 1 : -1) * (5.2 + (i % 3) * 0.9), (i - 3) * 1.6, -(i % 4) * 1.5] as [number, number, number],
         rot: [0.2 * (i % 3), -0.5 + i * 0.18, 0] as [number, number, number],
         s: 1.2 + (i % 3) * 0.35,
         c: i % 3 === 0 ? ACCENT : i % 3 === 1 ? INDIGO : VIOLET,
       })),
-    [y],
+    [],
   )
   return (
     <>
@@ -108,7 +100,7 @@ function Panes({ y }: { y: number }) {
   )
 }
 
-function Knot({ y }: { y: number }) {
+function Knot() {
   const m = useRef<THREE.Mesh>(null)
   useFrame(({ clock }) => {
     if (!m.current) return
@@ -116,21 +108,21 @@ function Knot({ y }: { y: number }) {
     m.current.rotation.y = clock.elapsedTime * 0.18
   })
   return (
-    <mesh ref={m} position={[-6.5, y, -6]}>
+    <mesh ref={m}>
       <torusKnotGeometry args={[1.9, 0.5, 180, 24]} />
       <meshBasicMaterial color={ACCENT} wireframe transparent opacity={0.16} />
     </mesh>
   )
 }
 
-function Ico({ y }: { y: number }) {
+function Ico() {
   const m = useRef<THREE.Mesh>(null)
   useFrame(({ clock }) => {
     if (m.current) m.current.rotation.y = clock.elapsedTime * 0.15
   })
   return (
     <Float speed={1} rotationIntensity={0.6} floatIntensity={1}>
-      <mesh ref={m} position={[6.8, y, -5]}>
+      <mesh ref={m}>
         <icosahedronGeometry args={[2.2, 1]} />
         <meshBasicMaterial color={VIOLET} wireframe transparent opacity={0.18} />
       </mesh>
@@ -138,7 +130,7 @@ function Ico({ y }: { y: number }) {
   )
 }
 
-function Rings({ y }: { y: number }) {
+function Rings() {
   const g = useRef<THREE.Group>(null)
   useFrame(({ clock }) => {
     if (!g.current) return
@@ -146,7 +138,7 @@ function Rings({ y }: { y: number }) {
     g.current.rotation.z = clock.elapsedTime * 0.08
   })
   return (
-    <group ref={g} position={[6.4, y, -6]}>
+    <group ref={g}>
       {[2.6, 3.4, 4.2].map((r, i) => (
         <mesh key={r} rotation={[0, 0, i * 0.6]}>
           <torusGeometry args={[r, 0.02, 8, 120]} />
@@ -157,22 +149,22 @@ function Rings({ y }: { y: number }) {
   )
 }
 
-function Helix({ y, h }: { y: number; h: number }) {
+function Helix() {
   const pts = useMemo(() => {
     const n = 90
-    const span = Math.max(4, h / PX)
+    const span = 9
     return Array.from({ length: n }, (_, i) => {
       const t = i / n
       const a = t * Math.PI * 6
-      return [Math.cos(a) * 1.6, y + span / 2 - t * span, -6 + Math.sin(a) * 1.6] as [number, number, number]
+      return [Math.cos(a) * 1.6, span / 2 - t * span, Math.sin(a) * 1.6] as [number, number, number]
     })
-  }, [y, h])
+  }, [])
   const g = useRef<THREE.Group>(null)
   useFrame(({ clock }) => {
     if (g.current) g.current.rotation.y = clock.elapsedTime * 0.25
   })
   return (
-    <group ref={g} position={[-6.2, 0, 0]}>
+    <group ref={g}>
       {pts.map((p, i) => (
         <mesh key={i} position={p}>
           <sphereGeometry args={[0.05, 8, 8]} />
@@ -217,28 +209,42 @@ function Dust({ height }: { height: number }) {
 }
 
 function Scene() {
-  const anchors = useAnchors(["metrics", "projects", "stack", "side", "approach", "timeline"])
   const mouse = useRef({ x: 0, y: 0 })
+  const [docH, setDocH] = useState(9000)
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       mouse.current.x = (e.clientX / innerWidth - 0.5) * 2
       mouse.current.y = -(e.clientY / innerHeight - 0.5) * 2
     }
     addEventListener("pointermove", onMove, { passive: true })
-    return () => removeEventListener("pointermove", onMove)
+    const t = setTimeout(() => setDocH(document.documentElement.scrollHeight), 1200)
+    return () => {
+      removeEventListener("pointermove", onMove)
+      clearTimeout(t)
+    }
   }, [])
-  const wy = (id: string) => (anchors[id] ? -(anchors[id].y + anchors[id].h / 2) / PX - 4.5 : -9999)
-  const docH = typeof document !== "undefined" ? document.documentElement.scrollHeight : 9000
   return (
     <>
       <Rig mouse={mouse} />
       <Dust height={docH} />
-      {anchors.metrics && <DataBars y={wy("metrics")} />}
-      {anchors.projects && <Panes y={wy("projects")} />}
-      {anchors.stack && <Knot y={wy("stack")} />}
-      {anchors.side && <Ico y={wy("side")} />}
-      {anchors.approach && <Rings y={wy("approach")} />}
-      {anchors.timeline && <Helix y={wy("timeline")} h={anchors.timeline.h} />}
+      <SectionAnchor id="metrics" x={6.2} z={-4}>
+        <DataBars />
+      </SectionAnchor>
+      <SectionAnchor id="projects" x={0} z={-5}>
+        <Panes />
+      </SectionAnchor>
+      <SectionAnchor id="stack" x={-6.5} z={-6}>
+        <Knot />
+      </SectionAnchor>
+      <SectionAnchor id="side" x={6.8} z={-5}>
+        <Ico />
+      </SectionAnchor>
+      <SectionAnchor id="approach" x={6.4} z={-6}>
+        <Rings />
+      </SectionAnchor>
+      <SectionAnchor id="timeline" x={-6.2} z={-6}>
+        <Helix />
+      </SectionAnchor>
     </>
   )
 }
