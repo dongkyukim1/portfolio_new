@@ -98,7 +98,7 @@ void main(){
   vec3 col = mix(blue, violet, smoothstep(-0.4, 0.6, n2));
   col = mix(col, cyan, smoothstep(0.5, 1.0, n1));
   float edge = smoothstep(0.0, 0.25, vUv.x) * smoothstep(1.0, 0.75, vUv.x);
-  gl_FragColor = vec4(col * band * 0.22 * edge, band * 0.9 * edge);
+  gl_FragColor = vec4(col * band * 0.07 * edge, band * 0.5 * edge);
 }`
 
 function Aurora({ span }: { span: number }) {
@@ -405,7 +405,7 @@ function Scene({ docH }: { docH: number }) {
       <EffectComposer multisampling={0}>
         <SMAA />
         <Bloom luminanceThreshold={0.5} luminanceSmoothing={0.35} intensity={1.15} mipmapBlur radius={0.8} />
-        <Vignette eskil={false} offset={0.22} darkness={0.7} />
+        <Vignette eskil={false} offset={0.35} darkness={0.45} />
         <Noise opacity={0.04} />
       </EffectComposer>
     </>
@@ -433,6 +433,7 @@ export function Backdrop3D() {
         gl={{ alpha: true, antialias: false, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
         style={{ background: "transparent" }}
       >
+        <color attach="background" args={["#04050c"]} />
         <fog attach="fog" args={["#04050c", 10, 30]} />
         <Scene docH={docH} />
       </Canvas>
