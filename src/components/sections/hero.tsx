@@ -26,7 +26,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[100lvh] w-full flex-col items-center justify-center overflow-hidden bg-ground px-5 text-center sm:px-10"
+      className="relative z-10 flex min-h-[100lvh] w-full flex-col items-center justify-center overflow-hidden bg-ground px-5 text-center sm:px-10"
     >
       <FluidCanvas />
       <div aria-hidden className="hero-scrim pointer-events-none absolute inset-0 z-[1]" />

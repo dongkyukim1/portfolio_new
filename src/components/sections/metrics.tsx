@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 
 export function Metrics() {
   return (
-    <section id="metrics" className="scroll-mt-24 border-t border-hairline bg-ground-2/60 py-[clamp(48px,7vw,88px)]">
+    <section id="metrics" className="scroll-mt-24 border-t border-hairline py-[clamp(48px,7vw,88px)]">
       <div className="mx-auto max-w-[1080px] px-[22px]">
         <BlurFade inView>
           <div className="lbl mb-4">By the numbers · 2024.07 – 2026.08</div>

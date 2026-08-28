@@ -24,6 +24,7 @@ export function ProjectFace({ p, index, compact = false }: { p: Project; index: 
         <span className="lbl absolute left-3 top-3 rounded-full border border-white/12 bg-black/40 px-2.5 py-1 !text-[10px] text-ink-2 backdrop-blur-md">
           {String(index + 1).padStart(2, "0")} · {p.period.split(" ")[0]}
         </span>
+        {!m.real && <span className="lbl absolute bottom-3 right-3 rounded-full bg-black/40 px-2 py-0.5 !text-[9.5px] text-ink-3 backdrop-blur-md">MOCKUP</span>}
         {p.featured && (
           <span className="absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[.12em] text-white" style={{ background: m.accent }}>
             FEATURED
@@ -105,6 +106,10 @@ function Rail({ p }: { p: Project }) {
 
 /** Detail sheet — glass scrim + one panel; the only place glass is used besides nav/dock. */
 function DetailSheet({ p, onClose, onStep }: { p: Project | null; onClose: () => void; onStep: (d: 1 | -1) => void }) {
+  const [shot, setShot] = useState(0)
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- reset gallery index when the project changes
+  useEffect(() => setShot(0), [p?.id])
+  const shots = p ? (mockups[p.id].gallery ?? [mockups[p.id].image]) : []
   useEffect(() => {
     if (!p) return
     const onKey = (e: KeyboardEvent) => {
@@ -146,8 +151,12 @@ function DetailSheet({ p, onClose, onStep }: { p: Project | null; onClose: () =>
             onClick={(e) => e.stopPropagation()}
             className="relative max-h-[92vh] w-full max-w-[1040px] overflow-y-auto rounded-t-[26px] border border-white/12 bg-surface shadow-[0_2px_8px_rgba(0,0,0,.3),0_40px_100px_rgba(0,0,0,.6)] sm:rounded-[26px]"
           >
-            <div className="relative aspect-[21/9] w-full overflow-hidden">
-              <Image src={mockups[p.id].image} alt="" fill sizes="1040px" className="object-cover object-top" unoptimized />
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-ground-2">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div key={shots[shot]} initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} className="absolute inset-0">
+                  <Image src={shots[shot]} alt={`${p.name} 화면 ${shot + 1}`} fill sizes="1040px" className="object-cover object-top" unoptimized />
+                </motion.div>
+              </AnimatePresence>
               <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
               <div className="absolute right-4 top-4 flex items-center gap-2">
                 <button type="button" onClick={() => onStep(-1)} aria-label="이전 프로젝트" className="grid size-10 place-items-center rounded-full border border-white/14 bg-black/40 text-ink backdrop-blur-md transition-colors hover:bg-white/14">
@@ -177,7 +186,23 @@ function DetailSheet({ p, onClose, onStep }: { p: Project | null; onClose: () =>
               </div>
             </div>
 
-            <div className="px-6 pb-8 sm:px-8">
+            {shots.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto px-6 pt-4 sm:px-8" role="tablist" aria-label="화면 캡처">
+                {shots.map((src, i) => (
+                  <button
+                    key={src}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === shot}
+                    onClick={() => setShot(i)}
+                    className={cn("relative h-14 w-24 shrink-0 overflow-hidden rounded-[8px] border transition-all", i === shot ? "border-white/60 opacity-100" : "border-white/10 opacity-55 hover:opacity-90")}
+                  >
+                    <Image src={src} alt="" fill sizes="96px" className="object-cover object-top" unoptimized />
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="px-6 pb-8 pt-4 sm:px-8">
               <p className="max-w-[72ch] text-[15.5px] leading-[1.75] text-ink-2">{p.tagline}</p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {p.stack.map((s) => (

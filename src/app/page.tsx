@@ -1,6 +1,7 @@
 import { ScrollProgress } from "@/components/ui/scroll-progress"
 import { SmoothScroll } from "@/components/fx/smooth-scroll"
 import { Cursor } from "@/components/fx/cursor"
+import { Backdrop3D } from "@/components/fx/backdrop-3d-loader"
 import { DockNav } from "@/components/nav"
 import { Hero } from "@/components/sections/hero"
 import { Metrics } from "@/components/sections/metrics"
@@ -19,8 +20,10 @@ export default function Page() {
       </a>
       <SmoothScroll />
       <Cursor />
+      <Backdrop3D />
       <ScrollProgress className="h-[2px] bg-gradient-to-r from-apple via-indigo to-[#bf5af2]" />
       <Hero />
+      <div className="relative z-10">
       <Metrics />
       <Projects />
       <Stack />
@@ -28,6 +31,7 @@ export default function Page() {
       <Approach />
       <Timeline />
       <Contact />
+      </div>
       <DockNav />
     </main>
   )
