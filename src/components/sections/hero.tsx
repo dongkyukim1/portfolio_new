@@ -8,6 +8,7 @@ import { FluidCanvas } from "@/components/fx/fluid-canvas"
 import { WordReveal } from "@/components/fx/word-reveal"
 import { TopNav } from "@/components/nav"
 import { WordRotate } from "@/components/ui/word-rotate"
+import { Magnetic } from "@/components/fx/magnetic"
 import { profile } from "@/data/profile"
 import { cn } from "@/lib/utils"
 
@@ -72,9 +73,11 @@ export function Hero() {
 
         <div className={cn("reveal mt-7 flex w-full justify-center sm:mt-10", inClass && "in")} style={{ transitionDelay: "1450ms" }}>
           <div className="flex h-14 max-w-full items-center gap-1 rounded-full border border-white/16 bg-white/8 p-1.5 shadow-[0_1px_2px_rgba(0,0,0,.05)] backdrop-blur-[12px] sm:h-16 sm:gap-1.5">
-            <a href="#projects" className="pill-white whitespace-nowrap !px-5">
-              프로젝트 보기
-            </a>
+            <Magnetic strength={0.25}>
+              <a href="#projects" className="pill-white whitespace-nowrap !px-5">
+                프로젝트 보기
+              </a>
+            </Magnetic>
             <a href={profile.github} target="_blank" rel="noreferrer" className="pill-glass gap-2 whitespace-nowrap !border-transparent !bg-transparent !px-4 hover:!bg-white/10">
               <GithubIcon className="size-4" /> GitHub
             </a>

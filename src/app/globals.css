@@ -295,7 +295,7 @@ body {
 .reveal.from-top { transform: translateY(-12px); }
 .reveal.in { opacity: 1; transform: none; }
 .hero-scrim {
-  background: radial-gradient(115% 95% at 50% 46%, rgba(4,5,12,0.68) 0%, rgba(4,5,12,0.68) 24%, rgba(4,5,12,0.46) 52%, rgba(4,5,12,0.12) 100%);
+  background: radial-gradient(115% 95% at 50% 46%, rgba(4,5,12,0.80) 0%, rgba(4,5,12,0.76) 24%, rgba(4,5,12,0.50) 52%, rgba(4,5,12,0.14) 100%);
 }
 .pill-white {
   display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 22px; border-radius:999px;
@@ -357,3 +357,13 @@ body {
 
 /* text zone stays legible under the holo layers */
 .holo__inner > div > div:last-child { position: relative; z-index: 1; }
+
+/* custom cursor active: hide the native one on fine pointers */
+html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor [role="button"] { cursor: none; }
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+/* lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }

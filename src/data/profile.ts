@@ -154,6 +154,9 @@ export const cloudSlugs = [
   "anthropic", "claude", "openai", "googlegemini", "modelcontextprotocol", "huggingface", "ollama",
 ]
 
+export type ProjectTag = "web" | "mobile" | "backend" | "infra" | "ai"
+export const TAG_LABEL: Record<ProjectTag, string> = { web: "웹", mobile: "모바일", backend: "백엔드", infra: "인프라", ai: "AI" }
+
 export type Project = {
   id: string
   name: string
@@ -167,11 +170,13 @@ export type Project = {
   shares?: { repo: string; note?: string; label: string; pct: number; tier: "lead" | "co" | "part" }[]
   links?: { label: string; href: string }[]
   featured?: boolean
+  tags: ProjectTag[]
 }
 
 export const projects: Project[] = [
   {
     id: "ilro",
+    tags: ["web", "backend", "infra"],
     name: "ilro",
     sub: "학원 LMS 플랫폼 (수학 · 과학)",
     period: "2026.04 — 재직 중",
@@ -224,6 +229,7 @@ export const projects: Project[] = [
   },
   {
     id: "scp",
+    tags: ["web", "mobile", "backend", "ai"],
     name: "Science Circuit Program",
     sub: "적응형 학습 플랫폼",
     period: "2025.10 — 2026.08",
@@ -270,6 +276,7 @@ export const projects: Project[] = [
   },
   {
     id: "challengers",
+    tags: ["mobile"],
     name: "challengers",
     sub: "학생용 통합 학습 앱 (Flutter)",
     period: "2026.07 — 재직 중",
@@ -305,6 +312,7 @@ export const projects: Project[] = [
   },
   {
     id: "rundem",
+    tags: ["mobile", "backend", "web"],
     name: "런덤메이트",
     sub: "러닝 크루 소셜 앱 (풀스택 3-tier)",
     period: "2025.12 — 2026.06",
@@ -345,6 +353,7 @@ export const projects: Project[] = [
   },
   {
     id: "vibeshield",
+    tags: ["ai", "web", "backend"],
     name: "VibeShield",
     sub: "로컬 코드 보안 점검 데스크톱 앱",
     period: "2026",
@@ -384,6 +393,7 @@ export const projects: Project[] = [
   },
   {
     id: "mission-control",
+    tags: ["web", "backend"],
     name: "mission-control",
     sub: "제품 운영 지표 대시보드",
     period: "2026.08 · 단독 · 100%",
@@ -413,6 +423,7 @@ export const projects: Project[] = [
   },
   {
     id: "megastudy",
+    tags: ["web", "mobile"],
     name: "megastudy",
     sub: "학습 웹 + Flutter 앱 동시 구축",
     period: "2026.03 — 2026.04",
@@ -441,6 +452,7 @@ export const projects: Project[] = [
   },
   {
     id: "portfolio-2026",
+    tags: ["web", "backend"],
     name: "portfolio_2026",
     sub: "Rails 풀스택 포트폴리오 사이트",
     period: "2026.02",

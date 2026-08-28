@@ -11,6 +11,7 @@ export function Stack() {
   return (
     <Section
       id="stack"
+      index="02"
       eyebrow="Tech Stack"
       title="6개 프로덕션 언어, 한 축의 제품."
       lede="같은 제품을 웹 · 앱 · 서버 · 인프라에서 각각의 언어로 이어 붙입니다. 강조된 항목이 최근 11개월 동안 가장 많이 커밋한 기술입니다."

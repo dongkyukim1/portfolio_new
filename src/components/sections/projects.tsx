@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import { AnimatePresence, motion } from "motion/react"
+import { AnimatePresence, LayoutGroup, motion } from "motion/react"
 import { ArrowUpRight, X } from "lucide-react"
 import { Section } from "@/components/section"
 import { HoloCard } from "@/components/fx/holo-card"
-import { BlurFade } from "@/components/ui/blur-fade"
 import { BorderBeam } from "@/components/ui/border-beam"
-import { projects, type Project } from "@/data/profile"
+import { projects, TAG_LABEL, type Project, type ProjectTag } from "@/data/profile"
 import { mockups } from "@/data/mockups"
 import { cn } from "@/lib/utils"
 
@@ -201,25 +200,67 @@ function DetailSheet({ p, onClose }: { p: Project | null; onClose: () => void })
   )
 }
 
+const FILTERS: (ProjectTag | "all")[] = ["all", "web", "mobile", "backend", "infra", "ai"]
+
 export function Projects() {
   const [open, setOpen] = useState<Project | null>(null)
+  const [filter, setFilter] = useState<ProjectTag | "all">("all")
+  const visible = filter === "all" ? projects : projects.filter((p) => p.tags.includes(filter))
   return (
     <Section
       id="projects"
+      index="01"
       eyebrow="Selected Work"
       title="운영 중인 제품을 끝까지 살려온 이력."
       lede="카드를 기울여 보고, 누르면 무엇을 · 왜 · 어떻게 고쳤는지와 저장소별 기여 지분이 펼쳐집니다. 모든 수치는 git log에서 직접 집계했습니다."
     >
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {projects.map((p, i) => (
-          <BlurFade key={p.id} inView delay={0.06 * (i % 4)} className="h-full">
-            <HoloCard onClick={() => setOpen(p)} ariaLabel={`${p.name} 상세 열기`} className="h-full">
-              {p.featured && <BorderBeam size={200} duration={9} colorFrom={mockups[p.id].accent} colorTo="#bf5af2" className="z-[5]" />}
-              <ProjectFace p={p} index={i} />
-            </HoloCard>
-          </BlurFade>
+      <div className="seg mb-6 inline-flex rounded-full bg-white/6 p-[3px]" role="tablist" aria-label="프로젝트 필터">
+        {FILTERS.map((f) => (
+          <button
+            key={f}
+            type="button"
+            role="tab"
+            aria-selected={filter === f}
+            onClick={() => setFilter(f)}
+            className={cn(
+              "relative rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors",
+              filter === f ? "text-black" : "text-ink-2 hover:text-ink",
+            )}
+          >
+            {filter === f && (
+              <motion.span layoutId="seg-pill" className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,.3)]" transition={{ type: "spring", stiffness: 400, damping: 32 }} />
+            )}
+            <span className="relative">{f === "all" ? "전체" : TAG_LABEL[f]}</span>
+            <span className="tabular relative ml-1.5 text-[11px] opacity-60">{f === "all" ? projects.length : projects.filter((p) => p.tags.includes(f)).length}</span>
+          </button>
         ))}
       </div>
+      <LayoutGroup>
+        <motion.div layout className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {visible.map((p) => {
+              const i = projects.indexOf(p)
+              return (
+                <motion.div
+                  key={p.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.94, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.94, filter: "blur(6px)" }}
+                  transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+                  className="h-full"
+                  data-cursor="열기"
+                >
+                  <HoloCard onClick={() => setOpen(p)} ariaLabel={`${p.name} 상세 열기`} className="h-full">
+                    {p.featured && <BorderBeam size={200} duration={9} colorFrom={mockups[p.id].accent} colorTo="#bf5af2" className="z-[5]" />}
+                    <ProjectFace p={p} index={i} />
+                  </HoloCard>
+                </motion.div>
+              )
+            })}
+          </AnimatePresence>
+        </motion.div>
+      </LayoutGroup>
       <DetailSheet p={open} onClose={() => setOpen(null)} />
     </Section>
   )

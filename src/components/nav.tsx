@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Home, FolderKanban, Layers, Compass, Mail, PenLine, Clock } from "lucide-react"
 import { GithubIcon } from "@/components/icons"
 import { Dock, DockIcon } from "@/components/ui/dock"
+import { Magnetic } from "@/components/fx/magnetic"
 import { profile } from "@/data/profile"
 import { cn } from "@/lib/utils"
 
@@ -42,10 +43,21 @@ export function TopNav({ inClass }: { inClass: boolean }) {
           </a>
         ))}
       </nav>
-      <a href={`mailto:${profile.email}`} className="pill-white !h-10 !px-[18px] !text-[14px] sm:!h-11 sm:!px-[22px] sm:!text-[15px]">
-        연락하기
-      </a>
+      <Magnetic strength={0.3}>
+        <a href={`mailto:${profile.email}`} className="pill-white !h-10 !px-[18px] !text-[14px] sm:!h-11 sm:!px-[22px] sm:!text-[15px]">
+          연락하기
+        </a>
+      </Magnetic>
     </header>
+  )
+}
+
+/** macOS-style tooltip above a dock icon. */
+function Tip({ children }: { children: string }) {
+  return (
+    <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md border border-white/12 bg-[#1c1c1e]/95 px-2.5 py-1 text-[11.5px] font-medium text-ink opacity-0 shadow-[0_8px_24px_rgba(0,0,0,.5)] transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+      {children}
+    </span>
   )
 }
 
@@ -81,18 +93,20 @@ export function DockNav() {
     >
       <Dock className="glass !mt-0 !h-[62px] !gap-[5px] !rounded-[22px] !border-white/12 !px-2.5" iconSize={40} iconMagnification={64} iconDistance={120}>
         {items.map(({ href, label, Icon }) => (
-          <DockIcon key={href} className="bg-white/6 hover:bg-white/14">
-            <a href={href} aria-label={label} title={label} className="flex h-full w-full items-center justify-center text-ink">
+          <DockIcon key={href} className="group relative bg-white/6 hover:bg-white/14">
+            <a href={href} aria-label={label} className="flex h-full w-full items-center justify-center text-ink">
               <Icon className="size-[45%]" strokeWidth={1.75} />
             </a>
+            <Tip>{label}</Tip>
           </DockIcon>
         ))}
         <span aria-hidden className="mx-1 h-8 w-px self-center bg-white/14" />
         {ext.map(({ href, label, Icon }) => (
-          <DockIcon key={href} className="bg-white/6 hover:bg-white/14">
-            <a href={href} target="_blank" rel="noreferrer" aria-label={label} title={label} className="flex h-full w-full items-center justify-center text-ink">
+          <DockIcon key={href} className="group relative bg-white/6 hover:bg-white/14">
+            <a href={href} target="_blank" rel="noreferrer" aria-label={label} className="flex h-full w-full items-center justify-center text-ink">
               <Icon className="size-[45%]" strokeWidth={1.75} />
             </a>
+            <Tip>{label}</Tip>
           </DockIcon>
         ))}
       </Dock>

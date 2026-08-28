@@ -7,6 +7,8 @@ import { ShimmerButton } from "@/components/ui/shimmer-button"
 import { BlurFade } from "@/components/ui/blur-fade"
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text"
 import { method, profile } from "@/data/profile"
+import { LocalTime } from "@/components/fx/local-time"
+import { Magnetic } from "@/components/fx/magnetic"
 
 const GLOBE = {
   width: 800,
@@ -30,7 +32,11 @@ export function Contact() {
     <section id="contact" className="relative scroll-mt-24 overflow-hidden border-t border-hairline">
       <div className="mx-auto grid max-w-[1080px] items-center gap-8 px-[22px] pb-[clamp(96px,14vw,180px)] pt-[clamp(56px,9vw,120px)] md:grid-cols-2">
         <BlurFade inView>
-          <div className="lbl">Contact</div>
+          <div className="lbl flex items-center gap-3">
+            <span className="tabular text-ink-4">06</span>
+            <span className="h-px w-6 bg-white/15" />
+            <span>Contact</span>
+          </div>
           <h2 className="mt-3 text-[clamp(34px,5.6vw,60px)] font-bold leading-[1.05] tracking-[-0.035em] text-ink">
             같이 만들
             <br />
@@ -40,11 +46,13 @@ export function Contact() {
             {profile.location} 기준으로 일하지만 저장소는 어디든 엽니다. 이메일이 가장 빠르고, 코드가 궁금하면 GitHub가 정직합니다.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
+            <Magnetic>
             <a href={`mailto:${profile.email}`}>
               <ShimmerButton className="h-12 px-6 text-[15px] font-semibold" background="#2997ff" shimmerColor="#ffffff">
                 <Mail className="mr-2 size-4" /> {profile.email}
               </ShimmerButton>
             </a>
+            </Magnetic>
             <a href={profile.github} target="_blank" rel="noreferrer" className="pill-glass gap-2">
               <GithubIcon className="size-4" /> GitHub <ArrowUpRight className="size-3.5 text-ink-3" />
             </a>
@@ -71,6 +79,7 @@ export function Contact() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-[12.5px] text-ink-3">
             <span>© 2026 {profile.nameEn} · {profile.education}</span>
+            <LocalTime />
             <span className="font-mono">Next.js 16 · Magic UI · WebGL fluid · Vercel</span>
           </div>
         </div>

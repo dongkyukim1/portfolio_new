@@ -12,12 +12,12 @@ const IDS = ["consulting-automation", "gildongmu", "tmt", "littlebank"]
 
 export function SideProjects() {
   return (
-    <Section id="side" eyebrow="Side Projects" title="측정해서 쓰고, 규칙으로 편향을 지우는 실험들.">
+    <Section id="side" index="03" eyebrow="Side Projects" title="측정해서 쓰고, 규칙으로 편향을 지우는 실험들.">
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {sideProjects.map((s, i) => {
           const m = mockups[IDS[i]]
           return (
-            <BlurFade key={s.name} inView delay={0.06 * i} className="h-full">
+            <BlurFade key={s.name} inView delay={0.06 * i} className="h-full" data-cursor="GitHub">
               <HoloCard href={s.href} ariaLabel={`${s.name} GitHub 열기`} className="h-full">
                 <div className="flex h-full flex-col">
                   <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-white/8 bg-ground-2">
