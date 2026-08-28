@@ -71,14 +71,14 @@ export function Hero() {
         />
 
         <div className={cn("reveal mt-7 flex w-full justify-center sm:mt-10", inClass && "in")} style={{ transitionDelay: "1450ms" }}>
-          <div className="flex h-14 max-w-full items-center gap-1.5 rounded-full border border-white/16 bg-white/8 p-1.5 pl-2 shadow-[0_1px_2px_rgba(0,0,0,.05)] backdrop-blur-[12px] sm:h-16 sm:pl-2.5">
-            <a href="#projects" className="pill-white">
+          <div className="flex h-14 max-w-full items-center gap-1 rounded-full border border-white/16 bg-white/8 p-1.5 shadow-[0_1px_2px_rgba(0,0,0,.05)] backdrop-blur-[12px] sm:h-16 sm:gap-1.5">
+            <a href="#projects" className="pill-white whitespace-nowrap !px-5">
               프로젝트 보기
             </a>
-            <a href={profile.github} target="_blank" rel="noreferrer" className="pill-glass gap-2 !border-transparent !bg-transparent hover:!bg-white/10">
+            <a href={profile.github} target="_blank" rel="noreferrer" className="pill-glass gap-2 whitespace-nowrap !border-transparent !bg-transparent !px-4 hover:!bg-white/10">
               <GithubIcon className="size-4" /> GitHub
             </a>
-            <a href={`mailto:${profile.email}`} className="pill-glass hidden !border-transparent !bg-transparent hover:!bg-white/10 sm:inline-flex">
+            <a href={`mailto:${profile.email}`} className="pill-glass hidden whitespace-nowrap !border-transparent !bg-transparent hover:!bg-white/10 md:inline-flex">
               {profile.email}
             </a>
           </div>

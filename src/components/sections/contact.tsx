@@ -64,7 +64,7 @@ export function Contact() {
       </div>
 
       <footer className="border-t border-hairline">
-        <div className="mx-auto max-w-[1080px] px-[22px] py-8">
+        <div className="mx-auto max-w-[1080px] px-[22px] pb-28 pt-8">
           <p className="max-w-[80ch] text-[12.5px] leading-[1.65] text-ink-3">
             <strong className="font-medium text-ink-2">측정 방법 — </strong>
             {method}

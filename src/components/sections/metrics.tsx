@@ -3,12 +3,10 @@
 import { motion } from "motion/react"
 import { NumberTicker } from "@/components/ui/number-ticker"
 import { BlurFade } from "@/components/ui/blur-fade"
-import { Marquee } from "@/components/ui/marquee"
-import { activity, metrics, stack } from "@/data/profile"
+import { activity, metrics } from "@/data/profile"
 import { cn } from "@/lib/utils"
 
 export function Metrics() {
-  const chips = stack.flatMap((g) => g.items)
   return (
     <section id="metrics" className="scroll-mt-24 border-t border-hairline bg-ground-2/60 py-[clamp(48px,7vw,88px)]">
       <div className="mx-auto max-w-[1080px] px-[22px]">
@@ -65,22 +63,6 @@ export function Metrics() {
         </BlurFade>
       </div>
 
-      <div className="relative mt-[clamp(40px,6vw,64px)] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-        <Marquee pauseOnHover className="[--duration:70s] [--gap:10px]">
-          {chips.map((c) => (
-            <span key={c.label} className={cn("chip", c.hot && "hot")}>
-              {c.label}
-            </span>
-          ))}
-        </Marquee>
-        <Marquee reverse pauseOnHover className="mt-2.5 [--duration:80s] [--gap:10px]">
-          {[...chips].reverse().map((c) => (
-            <span key={c.label} className={cn("chip", c.hot && "hot")}>
-              {c.label}
-            </span>
-          ))}
-        </Marquee>
-      </div>
     </section>
   )
 }
