@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import { AnimatePresence, LayoutGroup, motion } from "motion/react"
-import { ArrowUpRight, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react"
 import { Section } from "@/components/section"
 import { HoloCard } from "@/components/fx/holo-card"
 import { BorderBeam } from "@/components/ui/border-beam"
@@ -104,10 +104,14 @@ function Rail({ p }: { p: Project }) {
 }
 
 /** Detail sheet — glass scrim + one panel; the only place glass is used besides nav/dock. */
-function DetailSheet({ p, onClose }: { p: Project | null; onClose: () => void }) {
+function DetailSheet({ p, onClose, onStep }: { p: Project | null; onClose: () => void; onStep: (d: 1 | -1) => void }) {
   useEffect(() => {
     if (!p) return
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+      if (e.key === "ArrowRight") onStep(1)
+      if (e.key === "ArrowLeft") onStep(-1)
+    }
     addEventListener("keydown", onKey)
     const prev = document.body.style.overflow
     document.body.style.overflow = "hidden"
@@ -115,7 +119,7 @@ function DetailSheet({ p, onClose }: { p: Project | null; onClose: () => void })
       removeEventListener("keydown", onKey)
       document.body.style.overflow = prev
     }
-  }, [p, onClose])
+  }, [p, onClose, onStep])
 
   return (
     <AnimatePresence>
@@ -131,6 +135,7 @@ function DetailSheet({ p, onClose }: { p: Project | null; onClose: () => void })
         >
           <motion.div
             key={p.id}
+            data-lenis-prevent
             role="dialog"
             aria-modal="true"
             aria-label={`${p.name} 상세`}
@@ -144,16 +149,23 @@ function DetailSheet({ p, onClose }: { p: Project | null; onClose: () => void })
             <div className="relative aspect-[21/9] w-full overflow-hidden">
               <Image src={mockups[p.id].image} alt="" fill sizes="1040px" className="object-cover object-top" unoptimized />
               <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="닫기"
-                className="absolute right-4 top-4 grid size-10 place-items-center rounded-full border border-white/14 bg-black/40 text-ink backdrop-blur-md transition-colors hover:bg-white/14"
-              >
-                <X className="size-4" />
-              </button>
+              <div className="absolute right-4 top-4 flex items-center gap-2">
+                <button type="button" onClick={() => onStep(-1)} aria-label="이전 프로젝트" className="grid size-10 place-items-center rounded-full border border-white/14 bg-black/40 text-ink backdrop-blur-md transition-colors hover:bg-white/14">
+                  <ArrowLeft className="size-4" />
+                </button>
+                <button type="button" onClick={() => onStep(1)} aria-label="다음 프로젝트" className="grid size-10 place-items-center rounded-full border border-white/14 bg-black/40 text-ink backdrop-blur-md transition-colors hover:bg-white/14">
+                  <ArrowRight className="size-4" />
+                </button>
+                <button type="button" onClick={onClose} aria-label="닫기" className="grid size-10 place-items-center rounded-full border border-white/14 bg-black/40 text-ink backdrop-blur-md transition-colors hover:bg-white/14">
+                  <X className="size-4" />
+                </button>
+              </div>
               <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                <div className="lbl">{p.period}</div>
+                <div className="lbl">
+                  <span className="tabular text-ink-4">{String(projects.indexOf(p) + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
+                  <span className="mx-2 text-white/20">·</span>
+                  {p.period}
+                </div>
                 <h3 className="mt-2 text-[clamp(26px,4vw,40px)] font-semibold leading-[1.1] tracking-[-0.03em] text-ink">
                   {p.name} <span className="text-[0.6em] font-medium tracking-[-0.01em] text-ink-2">{p.sub}</span>
                 </h3>
@@ -261,7 +273,11 @@ export function Projects() {
           </AnimatePresence>
         </motion.div>
       </LayoutGroup>
-      <DetailSheet p={open} onClose={() => setOpen(null)} />
+      <DetailSheet
+        p={open}
+        onClose={() => setOpen(null)}
+        onStep={(d) => setOpen((cur) => (cur ? projects[(projects.indexOf(cur) + d + projects.length) % projects.length] : cur))}
+      />
     </Section>
   )
 }
