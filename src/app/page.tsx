@@ -21,7 +21,7 @@ export default function Page() {
       <SmoothScroll />
       <Cursor />
       <SodaBackdrop />
-      <ScrollProgress className="h-[2px] bg-gradient-to-r from-[#fbcfe8] via-[#0b8a78] to-[#0b4f8a]" />
+      <ScrollProgress className="h-[2px] bg-gradient-to-r from-[#fbcfe8] via-indigo to-[#bf5af2]" />
       <Hero />
       <div className="soda-zone relative z-10">
       <Metrics />
