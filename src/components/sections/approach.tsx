@@ -8,7 +8,7 @@ import { approach, commitNature } from "@/data/profile"
 export function Approach() {
   const max = Math.max(...commitNature.map((c) => c.v))
   return (
-    <Section id="approach" index="05" eyebrow="How I Work" title="증상이 아니라 원인에서 멈춥니다.">
+    <Section id="approach" index="04" eyebrow="How I Work" title="증상이 아니라 원인에서 멈춥니다.">
       <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <BlurFade inView delay={0.1}>
           <div className="panel overflow-hidden">

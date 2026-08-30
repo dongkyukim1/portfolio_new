@@ -4,7 +4,7 @@ import { timeline } from "@/data/profile"
 
 export function Timeline() {
   return (
-    <Section id="timeline" index="06" eyebrow="Timeline" title="이력." wide={false}>
+    <Section id="timeline" index="05" eyebrow="Timeline" title="이력." wide={false}>
       <BlurFade inView delay={0.1}>
         <div className="panel overflow-hidden">
           {timeline.map((t) => (

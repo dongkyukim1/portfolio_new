@@ -367,3 +367,64 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
+
+/* ═══════════ Soda zone — "Diet Soda" scene + glass/pink material for everything after the hero ═══════════ */
+.soda-bg {
+  --bg-inner: #0b8a78; --bg-mid: #044e3b; --bg-outer: #011411;
+  background: radial-gradient(circle at center, var(--bg-inner) 0%, var(--bg-mid) 50%, var(--bg-outer) 100%);
+}
+.soda-bubble { position: absolute; pointer-events: none; }
+@keyframes soda-float-up {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.4; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-110vh) translateX(30px) rotate(360deg); opacity: 0; }
+}
+.soda-parallax { transition: transform 0.1s ease-out; }
+.soda-leaf, .soda-berry {
+  position: absolute; outline: none; pointer-events: none;
+  --progress-bar-color: transparent; --poster-color: transparent;
+}
+.soda-leaf  { filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+.soda-berry { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+.soda-zone {
+  --surface:   rgba(255,255,255,0.05);
+  --surface-2: rgba(255,255,255,0.10);
+  --ground-2:  rgba(0,0,0,0.30);
+  --hairline:  rgba(255,255,255,0.12);
+  --apple:     #fbcfe8;
+  --ink-2:     rgba(255,255,255,0.78);
+  --ink-3:     rgba(255,255,255,0.58);
+  --ink-4:     rgba(255,255,255,0.36);
+}
+.soda-zone ::selection { background: rgba(251,207,232,0.35); }
+.soda-zone .panel {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 28px; box-shadow: none;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: background .4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.soda-zone .panel:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); }
+.soda-zone .holo__inner {
+  background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.10); box-shadow: none;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: border-color .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.soda-zone .holo:hover .holo__inner { border-color: #fbcfe8; }
+.soda-zone .chip { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.10); }
+.soda-zone .chip.hot { color: #011d17; background: #fbcfe8; border-color: #fbcfe8; }
+.soda-zone .grad-apple { background: linear-gradient(135deg, #ffffff 0%, #fbcfe8 100%); -webkit-background-clip: text; background-clip: text; }
+.soda-zone .pill-white { background: #fbcfe8; color: #011d17; }
+.soda-zone .pill-white:hover { background: #f8bfe0; }
+.soda-zone .pill-glass { background: rgba(0,0,0,0.5); border-color: transparent; color: #fff; }
+.soda-zone .pill-glass:hover { background: rgba(0,0,0,0.7); transform: translateY(-2px); }
+.soda-zone .live-dot { background: #fbcfe8; animation-name: pulse-dot-pink; }
+@keyframes pulse-dot-pink {
+  0% { box-shadow: 0 0 0 0 rgba(251,207,232,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(251,207,232,0); }
+  100% { box-shadow: 0 0 0 0 rgba(251,207,232,0); }
+}
+/* soda's cursive voice for the section eyebrows */
+.soda-eyebrow {
+  font-family: var(--font-galada), "Galada", cursive; font-size: 22px; line-height: 1; font-weight: 400;
+  letter-spacing: 0; text-transform: none; color: #fff;
+}

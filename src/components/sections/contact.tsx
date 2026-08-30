@@ -21,9 +21,9 @@ const GLOBE = {
   diffuse: 1.2,
   mapSamples: 18000,
   mapBrightness: 3,
-  baseColor: [0.18, 0.2, 0.28] as [number, number, number],
-  markerColor: [41 / 255, 151 / 255, 1] as [number, number, number],
-  glowColor: [0.06, 0.08, 0.16] as [number, number, number],
+  baseColor: [0.16, 0.34, 0.3] as [number, number, number],
+  markerColor: [251 / 255, 207 / 255, 232 / 255] as [number, number, number],
+  glowColor: [0.05, 0.22, 0.19] as [number, number, number],
   markers: [{ location: [37.5665, 126.978] as [number, number], size: 0.09 }],
 }
 
@@ -35,7 +35,7 @@ export function Contact() {
           <div className="lbl flex items-center gap-3">
             <span className="tabular text-ink-4">06</span>
             <span className="h-px w-6 bg-white/15" />
-            <span>Contact</span>
+            <span className="soda-eyebrow">Contact</span>
           </div>
           <h2 className="mt-3 text-[clamp(34px,5.6vw,60px)] font-bold leading-[1.05] tracking-[-0.035em] text-ink">
             같이 만들
@@ -48,7 +48,7 @@ export function Contact() {
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Magnetic>
             <a href={`mailto:${profile.email}`}>
-              <ShimmerButton className="h-12 px-6 text-[15px] font-semibold" background="#2997ff" shimmerColor="#ffffff">
+              <ShimmerButton className="h-12 px-6 text-[15px] font-semibold text-[#011d17]" background="#fbcfe8" shimmerColor="#ffffff">
                 <Mail className="mr-2 size-4" /> {profile.email}
               </ShimmerButton>
             </a>
@@ -69,7 +69,7 @@ export function Contact() {
         </BlurFade>
 
         <BlurFade inView delay={0.15} className="relative mx-auto aspect-square w-full max-w-[520px]">
-          <div aria-hidden className="pointer-events-none absolute inset-[-10%] rounded-full bg-[radial-gradient(circle,rgba(41,151,255,0.22),transparent_60%)] blur-3xl" />
+          <div aria-hidden className="pointer-events-none absolute inset-[-10%] rounded-full bg-[radial-gradient(circle,rgba(251,207,232,0.2),transparent_60%)] blur-3xl" />
           <SafeGlobe className="!max-w-none" config={GLOBE} />
         </BlurFade>
       </div>

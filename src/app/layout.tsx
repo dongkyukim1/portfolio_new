@@ -1,11 +1,18 @@
 import type { Metadata, Viewport } from "next"
-import { Geist_Mono, Onest } from "next/font/google"
+import { Galada, Geist_Mono, Onest } from "next/font/google"
 import "./globals.css"
 
 const onest = Onest({
   variable: "--font-onest",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+})
+
+const galada = Galada({
+  variable: "--font-galada",
+  subsets: ["latin"],
+  weight: "400",
   display: "swap",
 })
 
@@ -34,7 +41,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`dark ${onest.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="ko" className={`dark ${onest.variable} ${geistMono.variable} ${galada.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-ground text-ink">{children}</body>
     </html>
   )

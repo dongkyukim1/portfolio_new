@@ -1,14 +1,13 @@
 import { ScrollProgress } from "@/components/ui/scroll-progress"
 import { SmoothScroll } from "@/components/fx/smooth-scroll"
 import { Cursor } from "@/components/fx/cursor"
-import { Backdrop3D } from "@/components/fx/backdrop-3d-loader"
+import { SodaBackdrop } from "@/components/fx/soda-backdrop"
 import { DockNav } from "@/components/nav"
 import { Hero } from "@/components/sections/hero"
 import { Metrics } from "@/components/sections/metrics"
 import { Projects } from "@/components/sections/projects"
 import { Stack } from "@/components/sections/stack"
 import { SideProjects } from "@/components/sections/side-projects"
-import { Soda } from "@/components/sections/soda"
 import { Approach } from "@/components/sections/approach"
 import { Timeline } from "@/components/sections/timeline"
 import { Contact } from "@/components/sections/contact"
@@ -21,15 +20,14 @@ export default function Page() {
       </a>
       <SmoothScroll />
       <Cursor />
-      <Backdrop3D />
-      <ScrollProgress className="h-[2px] bg-gradient-to-r from-apple via-indigo to-[#bf5af2]" />
+      <SodaBackdrop />
+      <ScrollProgress className="h-[2px] bg-gradient-to-r from-[#fbcfe8] via-[#0b8a78] to-[#0b4f8a]" />
       <Hero />
-      <div className="relative z-10">
+      <div className="soda-zone relative z-10">
       <Metrics />
       <Projects />
       <Stack />
       <SideProjects />
-      <Soda />
       <Approach />
       <Timeline />
       <Contact />

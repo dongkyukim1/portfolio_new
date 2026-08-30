@@ -28,7 +28,7 @@ export function Section({
           <div className="lbl flex items-center gap-3">
             <span className="tabular text-ink-4">{index}</span>
             <span className="h-px w-6 bg-white/15" />
-            <span>{eyebrow}</span>
+            <span className="soda-eyebrow">{eyebrow}</span>
           </div>
           <h2 className="mt-4 max-w-[22ch] text-[clamp(28px,4.4vw,44px)] font-bold leading-[1.1] tracking-[-0.03em] text-ink [text-wrap:balance]">
             {title}
