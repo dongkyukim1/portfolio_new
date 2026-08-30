@@ -20,7 +20,7 @@ export function Stack() {
         <BlurFade inView delay={0.1} className="relative mx-auto w-full max-w-[420px] md:sticky md:top-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(251,207,232,0.18),transparent_62%)] blur-2xl"
+            className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(41,151,255,0.22),transparent_62%)] blur-2xl"
           />
           <div className="relative [&_canvas]:!h-auto [&_canvas]:!w-full [&_button]:!border-white/12 [&_button]:!bg-white/8 [&_button]:!text-ink">
             <IconCloud images={images} showControl={false} />

@@ -150,7 +150,7 @@ function DetailSheet({ p, onClose, onStep }: { p: Project | null; onClose: () =>
             exit={{ opacity: 0, y: 30, scale: 0.98, filter: "blur(6px)" }}
             transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="relative max-h-[92vh] w-full max-w-[1040px] overflow-y-auto rounded-t-[26px] border border-white/12 bg-[#08110f]/92 shadow-[0_2px_8px_rgba(0,0,0,.3),0_40px_100px_rgba(0,0,0,.6)] backdrop-blur-2xl sm:rounded-[26px]"
+            className="relative max-h-[92vh] w-full max-w-[1040px] overflow-y-auto rounded-t-[26px] border border-white/12 bg-[#141418]/94 shadow-[0_2px_8px_rgba(0,0,0,.3),0_40px_100px_rgba(0,0,0,.6)] backdrop-blur-2xl sm:rounded-[26px]"
           >
             <div className="relative aspect-[16/9] w-full overflow-hidden bg-ground-2">
               <AnimatePresence mode="wait" initial={false}>
@@ -158,7 +158,7 @@ function DetailSheet({ p, onClose, onStep }: { p: Project | null; onClose: () =>
                   <Image src={shots[shot]} alt={`${p.name} 화면 ${shot + 1}`} fill sizes="1040px" className="object-cover object-top" unoptimized />
                 </motion.div>
               </AnimatePresence>
-              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#08110f] via-[#08110f]/40 to-transparent" />
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#141418] via-[#141418]/40 to-transparent" />
               <div className="absolute right-4 top-4 flex items-center gap-2">
                 <button type="button" onClick={() => onStep(-1)} aria-label="이전 프로젝트" className="grid size-10 place-items-center rounded-full border border-white/14 bg-black/40 text-ink backdrop-blur-md transition-colors hover:bg-white/14">
                   <ArrowLeft className="size-4" />
