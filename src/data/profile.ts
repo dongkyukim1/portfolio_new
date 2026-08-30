@@ -13,6 +13,7 @@ export const profile = {
   email: "wlsntus55@gmail.com",
   github: "https://github.com/dongkyukim1",
   blog: "https://begin-developer.tistory.com/",
+  resume: "/dongkyu-kim-resume.pdf",
   education: "건국대학교 영어학과 · 경영학과",
 }
 
@@ -165,7 +166,7 @@ export type Project = {
   role?: string
   tagline: string
   stack: string[]
-  highlights: { title: string; body: string }[]
+  highlights: { title: string; body: string; impact?: string }[]
   stats?: { k: string; v: string }[]
   shares?: { repo: string; note?: string; label: string; pct: number; tier: "lead" | "co" | "part" }[]
   links?: { label: string; href: string }[]
@@ -192,6 +193,7 @@ export const projects: Project[] = [
       },
       {
         title: "학생 필기(Canvas) 입력 시스템 재설계",
+        impact: "Sentry 센티널",
         body: "손가락 스크롤과 펜 필기가 서로를 오인하던 문제를 명시적 inputMode(draw/scroll) 도입으로 정리하고, draw 모드에서 두 손가락 제스처(세로 스크롤 · 핀치 확대 · 가로 문제 이동)를 하나로 통합. 캔버스 메모리 누수 재발을 감시하는 Sentry 센티널(생존 카운터 + 임계 초과 경보)을 함께 심었습니다.",
       },
       {
@@ -200,14 +202,17 @@ export const projects: Project[] = [
       },
       {
         title: "기능을 화면에서 멈추지 않고 서버까지 내림",
+        impact: "저장소 3개 관통",
         body: "“검색에 없는 학교 직접 등록”은 POST /v1/schools를 계정 서버에 추가해 완성했고, 선생님 노트 전송 기능은 FE 모달 → gRPC 리소스 필드(lesson_index) → 노트 백엔드 WEB 플랫폼 확장까지 세 저장소를 가로질러 배선했습니다.",
       },
       {
         title: "운영 중 회귀·장애 추적",
+        impact: "id tiebreaker",
         body: "학생 목록 페이지네이션의 동점 정렬 중복·누락을 백엔드 id tiebreaker로 근본 수정. 콘텐츠 워커의 502를 유발하던 동기 호출을 트레이스에서 제거하고, 404 무한 루프를 만들던 stale 섹션을 걷어냈습니다.",
       },
       {
         title: "성능 · 빌드",
+        impact: "22MB → 2.88MB",
         body: "메인 CSS 번들 22MB → 2.88MB 축소. 어드민의 해설 조회를 병렬 청크 fetch + 이미지 네이티브 lazy-loading으로 개선.",
       },
     ],
@@ -240,14 +245,17 @@ export const projects: Project[] = [
     highlights: [
       {
         title: "UX 이벤트 로깅을 제품 전 계층에 종단 설계",
+        impact: "별도 BI 도구 0",
         body: "웹·모바일 클라이언트에 버퍼링 기반 이벤트 수집기를 심고, Django Admin 위에 분석 대시보드를 직접 구축. DAU, 플랫폼별 완료율, 이탈 문제번호 분포, 답변 시간 분포까지 — 별도 BI 도구 없이 운영 지표를 볼 수 있게 만들었습니다.",
       },
       {
         title: "인증 사고 대응: 토큰 회전으로 인한 부당 로그아웃",
+        impact: "401 연쇄 차단",
         body: "Cognito refresh token rotation 환경에서 일시적 갱신 실패가 전역 로그아웃으로 이어지던 문제를 수정. 회전된 토큰을 확실히 영속화하고 실제 만료인 경우에만 로그아웃하도록 게이트를 세워 401 연쇄와 폴링 루프를 끊었습니다.",
       },
       {
         title: "캐시 정합성과 집계 API",
+        impact: "N+1 제거",
         body: "리포트·AI 인사이트 캐시를 명시적으로 무효화하도록 정리하고, 문제세트 실제 문항 수를 한 번에 가져오는 effective-counts 배치 API로 N+1 조회를 걷어냈습니다.",
       },
       {
@@ -291,6 +299,7 @@ export const projects: Project[] = [
       },
       {
         title: "필기 벡터 정본화",
+        impact: "래스터 → 벡터",
         body: "레벨테스트 필기를 래스터가 아닌 벡터로 정본 저장하도록 전환해, 웹·앱 어디서 다시 열어도 같은 풀이가 재현되고 재필기가 가능하도록 만들었습니다.",
       },
       {
@@ -327,10 +336,12 @@ export const projects: Project[] = [
       },
       {
         title: "Hibernate 영속성 버그를 우회가 아니라 원인으로 해결",
+        impact: "AssertionFailure 0",
         body: "러닝 통계 엔티티 저장 시 반복되던 AssertionFailure를 merge 대신 persist 경로를 타도록 version·userId 처리를 바로잡아 제거했습니다.",
       },
       {
         title: "갓 메서드 해체",
+        impact: "7 · 7 · 5 헬퍼",
         body: "회원가입 · GPS 포인트 저장 · 세션 종료 세 개의 거대 메서드를 각각 7 / 7 / 5개의 의도가 드러나는 헬퍼로 분해. 이후 기능 추가가 이 구조 위에서 국소적으로 끝났습니다.",
       },
       {
@@ -364,6 +375,7 @@ export const projects: Project[] = [
     highlights: [
       {
         title: "OWASP 기반 9종 취약점 + 한국 규제 매핑",
+        impact: "ISMS-P 매핑",
         body: "SQL 인젝션 · XSS · 하드코딩 비밀키 · 명령어 주입 · 경로 조작 · 취약 암호화 · 역직렬화 · SSRF · 인증 누락을 YAML 룰로 정의하고, 각 룰을 ISMS-P · 전자금융감독규정 조항에 매핑해 한글 리포트를 생성합니다.",
       },
       {

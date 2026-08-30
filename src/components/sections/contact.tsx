@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowUpRight, Mail, PenLine } from "lucide-react"
+import { ArrowUpRight, FileDown, Mail, PenLine } from "lucide-react"
 import { GithubIcon } from "@/components/icons"
 import { SafeGlobe } from "@/components/fx/safe-globe"
 import { ShimmerButton } from "@/components/ui/shimmer-button"
@@ -58,6 +58,9 @@ export function Contact() {
             </a>
             <a href={profile.blog} target="_blank" rel="noreferrer" className="pill-glass gap-2">
               <PenLine className="size-4" /> Blog <ArrowUpRight className="size-3.5 text-ink-3" />
+            </a>
+            <a href={profile.resume} download className="pill-glass gap-2">
+              <FileDown className="size-4" /> 이력서 PDF
             </a>
           </div>
           <AnimatedShinyText className="mt-8 inline-flex items-center gap-2 text-[13px] text-ink-3" shimmerWidth={120}>

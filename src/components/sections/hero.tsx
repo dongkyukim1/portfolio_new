@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ArrowDown } from "lucide-react"
+import { ArrowDown, FileDown } from "lucide-react"
 import { GithubIcon } from "@/components/icons"
 import { motion, useScroll, useTransform } from "motion/react"
 import { FluidCanvas } from "@/components/fx/fluid-canvas"
@@ -78,6 +78,9 @@ export function Hero() {
                 프로젝트 보기
               </a>
             </Magnetic>
+            <a href={profile.resume} download className="pill-glass gap-2 whitespace-nowrap !border-transparent !bg-transparent !px-4 hover:!bg-white/10">
+              <FileDown className="size-4" /> 이력서
+            </a>
             <a href={profile.github} target="_blank" rel="noreferrer" className="pill-glass gap-2 whitespace-nowrap !border-transparent !bg-transparent !px-4 hover:!bg-white/10">
               <GithubIcon className="size-4" /> GitHub
             </a>

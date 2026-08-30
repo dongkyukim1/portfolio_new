@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Home, FolderKanban, Layers, Compass, Mail, PenLine, Clock } from "lucide-react"
+import { Home, FolderKanban, Layers, Compass, Mail, PenLine, Clock, FileDown } from "lucide-react"
 import { GithubIcon } from "@/components/icons"
 import { Dock, DockIcon } from "@/components/ui/dock"
 import { Magnetic } from "@/components/fx/magnetic"
@@ -82,6 +82,7 @@ export function DockNav() {
   const ext = [
     { href: profile.github, label: "GitHub", Icon: GithubIcon },
     { href: profile.blog, label: "Blog", Icon: PenLine },
+    { href: profile.resume, label: "이력서 PDF", Icon: FileDown },
   ]
 
   return (

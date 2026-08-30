@@ -9,6 +9,7 @@ import { HoloCard } from "@/components/fx/holo-card"
 import { BorderBeam } from "@/components/ui/border-beam"
 import { projects, TAG_LABEL, type Project, type ProjectTag } from "@/data/profile"
 import { mockups } from "@/data/mockups"
+import { ArchDiagram } from "@/components/fx/arch-diagram"
 import { cn } from "@/lib/utils"
 
 const TIER_OPACITY = { lead: "opacity-100", co: "opacity-60", part: "opacity-30" } as const
@@ -222,13 +223,21 @@ function DetailSheet({ p, onClose, onStep }: { p: Project | null; onClose: () =>
                       className="border-l-2 border-white/10 pl-4 transition-colors hover:border-[color:var(--acc)]"
                       style={{ "--acc": mockups[p.id].accent } as React.CSSProperties}
                     >
-                      <b className="block text-[15.5px] font-semibold tracking-[-0.012em] text-ink">{h.title}</b>
+                      <span className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
+                        <b className="text-[15.5px] font-semibold tracking-[-0.012em] text-ink">{h.title}</b>
+                        {h.impact && (
+                          <span className="tabular shrink-0 font-mono text-[12px] font-semibold tracking-[-0.01em]" style={{ color: mockups[p.id].accent }}>
+                            {h.impact}
+                          </span>
+                        )}
+                      </span>
                       <span className="mt-1 block text-[14px] leading-[1.75] text-ink-2">{h.body}</span>
                     </motion.li>
                   ))}
                 </ul>
                 <Rail p={p} />
               </div>
+              <ArchDiagram id={p.id} accent={mockups[p.id].accent} />
             </div>
           </motion.div>
         </motion.div>
