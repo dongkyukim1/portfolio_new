@@ -1,52 +1,42 @@
 "use client"
 
 import { useEffect, useRef, useState, type CSSProperties } from "react"
-import Script from "next/script"
 import gsap from "gsap"
 
 /**
- * "Diet Soda" scene as the page-long backdrop behind every section after the hero.
- * Fixed radial gradient (teal → blue past #approach), rising PNG bubbles, floating 3D leaves/berries
- * (Google <model-viewer>) with mouse parallax and pointer repulsion. Crossing the flavor boundary runs
- * the soda choreography: background morph + berries implode → cherry↔blueberry swap → explode.
+ * Page-long backdrop behind every section after the hero, in the "Diet Soda" design language:
+ * fixed radial gradient (teal → blue past #approach), rising bubbles, and floating glass tiles that carry
+ * the tech stack — mouse parallax, pointer repulsion, gentle float. Crossing the flavor boundary runs the
+ * soda choreography: gradient morph + tiles implode → icon set swaps (product ↔ platform) → explode out.
  */
 
-const A = "/soda"
-const CHERRY_GLB = `${A}/cherry.glb`
-const BLUEBERRY_GLB = `${A}/blueberry.glb`
-const LEAVES_GLB = `${A}/leaves.glb`
-const BUBBLE_PNG = `${A}/bubble.png`
-const MODEL_VIEWER_CDN = "https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"
+const BUBBLE_PNG = "/soda/bubble.png"
+const icon = (slug: string) => `https://cdn.simpleicons.org/${slug}/ffffff`
 
 type Flavor = "classic" | "blue"
 const THEME: Record<Flavor, { inner: string; mid: string; outer: string }> = {
   classic: { inner: "#0b8a78", mid: "#044e3b", outer: "#011411" },
   blue: { inner: "#0b4f8a", mid: "#04294e", outer: "#010c14" },
 }
-/** Section whose approach flips the flavor (Classic above, Zero Lime below). */
+/** Section whose approach flips the flavor (product stack above, platform stack below). */
 const FLAVOR_BOUNDARY_ID = "approach"
 
-type Item = { style: CSSProperties; orbit: string; exposure: string }
-const LEAVES: Item[] = [
-  { style: { top: "10%", left: "15%", width: 60, height: 60 }, orbit: "45deg 75deg 105%", exposure: "1.0" },
-  { style: { top: "40%", left: "80%", width: 140, height: 140, opacity: 0.4 }, orbit: "-30deg 60deg 105%", exposure: "1.0" },
-  { style: { top: "70%", left: "75%", width: 80, height: 80 }, orbit: "120deg 85deg 105%", exposure: "1.0" },
-  { style: { top: "85%", left: "20%", width: 120, height: 120, opacity: 0.3 }, orbit: "10deg 45deg 105%", exposure: "1.0" },
-]
+/** Tile slots: position + size. `icons` = [classic, blue] slugs. */
+type Slot = { style: CSSProperties; size: number; icons: [string, string]; label: [string, string] }
 /** Behind the content column (dimmed through the glass). */
-const BERRIES_BG: Item[] = [
-  { style: { top: "15%", left: "40%", width: 80, height: 80, opacity: 0.7 }, orbit: "-20deg 110deg 105%", exposure: "1.0" },
-  { style: { top: "50%", left: "55%", width: 70, height: 70, opacity: 0.6 }, orbit: "160deg 45deg 105%", exposure: "1.0" },
-  { style: { top: "80%", left: "35%", width: 75, height: 75, opacity: 0.7 }, orbit: "45deg 20deg 105%", exposure: "1.0" },
+const SLOTS_BG: Slot[] = [
+  { style: { top: "14%", left: "40%" }, size: 56, icons: ["vite", "grpc"], label: ["Vite", "gRPC"] },
+  { style: { top: "52%", left: "56%" }, size: 48, icons: ["tailwindcss", "redis"], label: ["Tailwind", "Redis"] },
+  { style: { top: "80%", left: "34%" }, size: 52, icons: ["figma", "sentry"], label: ["Figma", "Sentry"] },
 ]
-/** Above the content — kept to the side gutters so the resume stays readable. */
-const BERRIES_FG: Item[] = [
-  { style: { top: "20%", left: "2%", width: 220, height: 220 }, orbit: "45deg 120deg 105%", exposure: "1.2" },
-  { style: { top: "60%", left: "11%", width: 100, height: 100 }, orbit: "-120deg 45deg 105%", exposure: "1.2" },
-  { style: { top: "25%", right: "2%", width: 250, height: 250 }, orbit: "200deg 90deg 105%", exposure: "1.2" },
-  { style: { top: "6%", right: "20%", width: 140, height: 140 }, orbit: "10deg 20deg 105%", exposure: "1.2" },
-  { style: { top: "82%", left: "5%", width: 120, height: 120 }, orbit: "-45deg 160deg 105%", exposure: "1.2" },
-  { style: { top: "62%", right: "9%", width: 180, height: 180 }, orbit: "80deg 75deg 105%", exposure: "1.2" },
+/** Above the content — pinned to the side gutters so the resume stays readable. */
+const SLOTS_FG: Slot[] = [
+  { style: { top: "18%", left: "3%" }, size: 96, icons: ["nextdotjs", "kubernetes"], label: ["Next.js", "Kubernetes"] },
+  { style: { top: "58%", left: "10%" }, size: 64, icons: ["typescript", "go"], label: ["TypeScript", "Go"] },
+  { style: { top: "24%", right: "3%" }, size: 104, icons: ["react", "springboot"], label: ["React", "Spring Boot"] },
+  { style: { top: "6%", right: "19%" }, size: 72, icons: ["flutter", "django"], label: ["Flutter", "Django"] },
+  { style: { top: "80%", left: "5%" }, size: 72, icons: ["vercel", "docker"], label: ["Vercel", "Docker"] },
+  { style: { top: "62%", right: "9%" }, size: 84, icons: ["expo", "postgresql"], label: ["Expo", "PostgreSQL"] },
 ]
 
 const FLOAT_DUR = [5, 7, 6, 8, 5.5, 6.5, 9, 11, 10]
@@ -55,9 +45,8 @@ export function SodaBackdrop() {
   const [fx, setFx] = useState(false)
   const bgRef = useRef<HTMLDivElement>(null)
   const bubblesRef = useRef<HTMLDivElement>(null)
-  const leavesRef = useRef<HTMLDivElement>(null)
-  const berriesBgRef = useRef<HTMLDivElement>(null)
-  const berriesFgRef = useRef<HTMLDivElement>(null)
+  const tilesBgRef = useRef<HTMLDivElement>(null)
+  const tilesFgRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fine = matchMedia("(pointer: fine)").matches
@@ -77,8 +66,7 @@ export function SodaBackdrop() {
       bubble.src = BUBBLE_PNG
       bubble.alt = ""
       bubble.className = "soda-bubble"
-      const size = Math.random() * 20 + 10 + "px"
-      bubble.style.width = size
+      bubble.style.width = Math.random() * 20 + 10 + "px"
       bubble.style.height = "auto"
       bubble.style.left = Math.random() * 100 + "%"
       bubble.style.bottom = "-50px"
@@ -100,12 +88,11 @@ export function SodaBackdrop() {
     }
   }, [])
 
-  // 3D scene: parallax, repulsion, float, scroll-driven flavor switch.
+  // Tiles: parallax, repulsion, float, scroll-driven flavor switch.
   useEffect(() => {
     const bg = bgRef.current
-    const leavesBG = leavesRef.current
-    const berriesBG = berriesBgRef.current
-    const berriesFG = berriesFgRef.current
+    const tilesBG = tilesBgRef.current
+    const tilesFG = tilesFgRef.current
     if (!bg) return
 
     let current: Flavor = "classic"
@@ -113,15 +100,14 @@ export function SodaBackdrop() {
     let raf = 0
     const mouse = { x: 0, y: 0, px: -9999, py: -9999 }
     const currentMouse = { x: 0, y: 0 }
-    const allBerries = fx ? Array.from(document.querySelectorAll<HTMLElement>(".soda-berry")) : []
-    const leaves = fx ? Array.from(document.querySelectorAll<HTMLElement>(".soda-leaf")) : []
+    const tiles = fx ? Array.from(document.querySelectorAll<HTMLElement>(".soda-tile")) : []
 
-    allBerries.forEach((b) => {
-      b.dataset.rx = "0"
-      b.dataset.ry = "0"
-      b.dataset.angle = String(Math.random() * 360)
-      b.dataset.baseX = "0"
-      b.dataset.baseY = "0"
+    tiles.forEach((t) => {
+      t.dataset.rx = "0"
+      t.dataset.ry = "0"
+      t.dataset.angle = String((Math.random() - 0.5) * 24)
+      t.dataset.baseX = "0"
+      t.dataset.baseY = "0"
     })
 
     function desiredFlavor(): Flavor {
@@ -129,50 +115,51 @@ export function SodaBackdrop() {
       if (!el) return "classic"
       return el.getBoundingClientRect().top < innerHeight * 0.6 ? "blue" : "classic"
     }
-
     function setTheme(flavor: Flavor) {
       const t = THEME[flavor]
       bg!.style.setProperty("--bg-inner", t.inner)
       bg!.style.setProperty("--bg-mid", t.mid)
       bg!.style.setProperty("--bg-outer", t.outer)
     }
+    function applyIcon(tile: HTMLElement, flavor: Flavor) {
+      const img = tile.querySelector("img")
+      const lbl = tile.querySelector<HTMLElement>(".soda-tile__label")
+      const i = flavor === "blue" ? 1 : 0
+      if (img) img.src = icon(tile.dataset[`icon${i}`] ?? "")
+      if (lbl) lbl.textContent = tile.dataset[`label${i}`] ?? ""
+    }
 
     // First paint: match the scroll position without choreography (deep links).
     current = desiredFlavor()
     setTheme(current)
-    allBerries.forEach((b) => b.setAttribute("src", current === "blue" ? BLUEBERRY_GLB : CHERRY_GLB))
+    tiles.forEach((t) => applyIcon(t, current))
 
     function switchFlavor(flavor: Flavor) {
       if (isSwitching) return
       isSwitching = true
       current = flavor
       const t = THEME[flavor]
-
-      // 1. Background morph
       gsap.to(bg!, { "--bg-inner": t.inner, "--bg-mid": t.mid, "--bg-outer": t.outer, duration: 1.5, ease: "power2.inOut" })
-
-      if (allBerries.length === 0) {
+      if (tiles.length === 0) {
         isSwitching = false
         return
       }
-
-      // 2. Berries "hide & reveal" with dynamic positioning
       let completed = 0
-      allBerries.forEach((berry) => {
-        const bW = berry.offsetWidth / 2
-        const bH = berry.offsetHeight / 2
-        const centerX = window.innerWidth / 2 - berry.offsetLeft - bW
-        const centerY = window.innerHeight / 2 - berry.offsetTop - bH
-        const startAngle = parseFloat(berry.dataset.angle ?? "0") || 0
-        const currentBaseX = parseFloat(berry.dataset.baseX ?? "0") || 0
-        const currentBaseY = parseFloat(berry.dataset.baseY ?? "0") || 0
+      tiles.forEach((tile) => {
+        const bW = tile.offsetWidth / 2
+        const bH = tile.offsetHeight / 2
+        const centerX = window.innerWidth / 2 - tile.offsetLeft - bW
+        const centerY = window.innerHeight / 2 - tile.offsetTop - bH
+        const startAngle = parseFloat(tile.dataset.angle ?? "0") || 0
+        const currentBaseX = parseFloat(tile.dataset.baseX ?? "0") || 0
+        const currentBaseY = parseFloat(tile.dataset.baseY ?? "0") || 0
         const nextBaseX = (Math.random() - 0.5) * 200
         const nextBaseY = (Math.random() - 0.5) * 200
 
-        gsap.set(berry, { rotation: startAngle, x: currentBaseX, y: currentBaseY })
+        gsap.set(tile, { rotation: startAngle, x: currentBaseX, y: currentBaseY })
         gsap
           .timeline()
-          .to(berry, {
+          .to(tile, {
             x: centerX,
             y: centerY,
             rotation: startAngle + 45,
@@ -180,10 +167,10 @@ export function SodaBackdrop() {
             opacity: 0,
             duration: 0.5,
             ease: "power2.in",
-            onComplete: () => berry.setAttribute("src", flavor === "blue" ? BLUEBERRY_GLB : CHERRY_GLB),
+            onComplete: () => applyIcon(tile, flavor),
           })
-          .to(berry, { duration: 0.3 })
-          .to(berry, {
+          .to(tile, { duration: 0.3 })
+          .to(tile, {
             x: nextBaseX,
             y: nextBaseY,
             rotation: startAngle + 90,
@@ -192,13 +179,13 @@ export function SodaBackdrop() {
             duration: 0.9,
             ease: "back.out(1.5)",
             onComplete: () => {
-              berry.dataset.angle = String(startAngle + 90)
-              berry.dataset.baseX = String(nextBaseX)
-              berry.dataset.baseY = String(nextBaseY)
-              berry.dataset.rx = "0"
-              berry.dataset.ry = "0"
+              tile.dataset.angle = String(startAngle + 90)
+              tile.dataset.baseX = String(nextBaseX)
+              tile.dataset.baseY = String(nextBaseY)
+              tile.dataset.rx = "0"
+              tile.dataset.ry = "0"
               completed++
-              if (completed === allBerries.length) isSwitching = false
+              if (completed === tiles.length) isSwitching = false
             },
           })
       })
@@ -220,13 +207,12 @@ export function SodaBackdrop() {
       const want = desiredFlavor()
       if (want !== current && !isSwitching) switchFlavor(want)
 
-      if (berriesFG) berriesFG.style.transform = `translate(${currentMouse.x * 60}px, ${currentMouse.y * 60}px)`
-      if (berriesBG) berriesBG.style.transform = `translate(${currentMouse.x * -30}px, ${currentMouse.y * -30}px)`
-      if (leavesBG) leavesBG.style.transform = `translate(${currentMouse.x * -15}px, ${currentMouse.y * -15}px)`
+      if (tilesFG) tilesFG.style.transform = `translate(${currentMouse.x * 60}px, ${currentMouse.y * 60}px)`
+      if (tilesBG) tilesBG.style.transform = `translate(${currentMouse.x * -30}px, ${currentMouse.y * -30}px)`
 
       if (!isSwitching) {
-        allBerries.forEach((berry, i) => {
-          const r = berry.getBoundingClientRect()
+        tiles.forEach((tile, i) => {
+          const r = tile.getBoundingClientRect()
           const diffX = mouse.px - (r.left + r.width / 2)
           const diffY = mouse.py - (r.top + r.height / 2)
           const distance = Math.sqrt(diffX * diffX + diffY * diffY)
@@ -239,34 +225,28 @@ export function SodaBackdrop() {
             targetRy = (diffY / distance) * force * -80
             speedMult = 1 + force * 5
           }
-          let rx = parseFloat(berry.dataset.rx ?? "0") || 0
-          let ry = parseFloat(berry.dataset.ry ?? "0") || 0
-          let angle = parseFloat(berry.dataset.angle ?? "0") || 0
-          const baseX = parseFloat(berry.dataset.baseX ?? "0") || 0
-          const baseY = parseFloat(berry.dataset.baseY ?? "0") || 0
+          let rx = parseFloat(tile.dataset.rx ?? "0") || 0
+          let ry = parseFloat(tile.dataset.ry ?? "0") || 0
+          let angle = parseFloat(tile.dataset.angle ?? "0") || 0
+          const baseX = parseFloat(tile.dataset.baseX ?? "0") || 0
+          const baseY = parseFloat(tile.dataset.baseY ?? "0") || 0
           rx += (targetRx - rx) * 0.1
           ry += (targetRy - ry) * 0.1
-          angle += 0.2 * speedMult
-          berry.dataset.rx = String(rx)
-          berry.dataset.ry = String(ry)
-          berry.dataset.angle = String(angle)
+          // tiles keep an upright-ish attitude: spin only while being pushed
+          angle += 0.2 * (speedMult - 1)
+          tile.dataset.rx = String(rx)
+          tile.dataset.ry = String(ry)
+          tile.dataset.angle = String(angle)
           const dur = FLOAT_DUR[i % FLOAT_DUR.length]
           const phase = (time + i * 0.7) * ((Math.PI * 2) / dur)
           const floatY = Math.sin(phase) * 15
           const floatAngle = Math.cos(phase) * 6
-          berry.style.transform = `translate(${rx + baseX}px, ${ry + baseY + floatY}px) rotate(${angle + floatAngle}deg)`
+          // 3D attitude follows the cursor like the soda can
+          const tiltX = -currentMouse.y * 18
+          const tiltY = currentMouse.x * 24
+          tile.style.transform = `translate(${rx + baseX}px, ${ry + baseY + floatY}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) rotate(${angle + floatAngle}deg)`
         })
       }
-
-      leaves.forEach((leaf, i) => {
-        const dur = 10 + i * 2
-        const phase = (time + i * 1.2) * ((Math.PI * 2) / dur)
-        const floatY = Math.sin(phase) * 20
-        const floatX = Math.cos(phase * 0.5) * 15
-        const floatAngle = Math.sin(phase * 0.3) * 15
-        leaf.style.transform = `translate(${floatX}px, ${floatY}px) rotate(${floatAngle}deg)`
-      })
-
       raf = requestAnimationFrame(animate)
     }
     raf = requestAnimationFrame(animate)
@@ -274,48 +254,43 @@ export function SodaBackdrop() {
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener("mousemove", onMove)
-      gsap.killTweensOf([bg, ...allBerries])
+      gsap.killTweensOf([bg, ...tiles])
     }
   }, [fx])
 
-  const mv = (item: Item, cls: string, src: string, key: string) => (
-    <model-viewer
+  const tile = (s: Slot, key: string, dim?: boolean) => (
+    <div
       key={key}
-      className={cls}
-      style={item.style}
-      src={src}
-      environment-image="neutral"
-      exposure={item.exposure}
-      interaction-prompt="none"
-      camera-orbit={item.orbit}
-    />
+      className={dim ? "soda-tile soda-tile--dim" : "soda-tile"}
+      style={{ ...s.style, width: s.size, height: s.size }}
+      data-icon0={s.icons[0]}
+      data-icon1={s.icons[1]}
+      data-label0={s.label[0]}
+      data-label1={s.label[1]}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element -- remote SVG mark swapped at runtime */}
+      <img src={icon(s.icons[0])} alt="" width={s.size} height={s.size} draggable={false} />
+      <span className="soda-tile__label">{s.label[0]}</span>
+    </div>
   )
 
   return (
     <>
-      {fx && <Script id="model-viewer" type="module" src={MODEL_VIEWER_CDN} strategy="afterInteractive" />}
-
-      {/* ground: gradient + bubbles + far layers (behind the content column) */}
+      {/* ground: gradient + bubbles + far tiles (behind the content column) */}
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div ref={bgRef} className="soda-bg absolute inset-0" />
         <div ref={bubblesRef} className="absolute inset-0 overflow-hidden" />
         {fx && (
-          <>
-            <div ref={leavesRef} className="soda-parallax absolute inset-0">
-              {LEAVES.map((l, i) => mv(l, "soda-leaf", LEAVES_GLB, `leaf-${i}`))}
-            </div>
-            <div ref={berriesBgRef} className="soda-parallax absolute inset-0">
-              {BERRIES_BG.map((b, i) => mv(b, "soda-berry", CHERRY_GLB, `bg-${i}`))}
-            </div>
-          </>
+          <div ref={tilesBgRef} className="soda-parallax absolute inset-0">
+            {SLOTS_BG.map((s, i) => tile(s, `bg-${i}`, true))}
+          </div>
         )}
       </div>
-
-      {/* foreground berries: above the content, pinned to the side gutters */}
+      {/* near tiles: above the content, pinned to the side gutters */}
       {fx && (
-        <div aria-hidden className="pointer-events-none fixed inset-0 z-[15] overflow-hidden">
-          <div ref={berriesFgRef} className="soda-parallax absolute inset-0">
-            {BERRIES_FG.map((b, i) => mv(b, "soda-berry", CHERRY_GLB, `fg-${i}`))}
+        <div aria-hidden className="pointer-events-none fixed inset-0 z-[15] overflow-hidden [perspective:1200px]">
+          <div ref={tilesFgRef} className="soda-parallax absolute inset-0 [transform-style:preserve-3d]">
+            {SLOTS_FG.map((s, i) => tile(s, `fg-${i}`))}
           </div>
         </div>
       )}

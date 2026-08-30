@@ -381,13 +381,27 @@ html.lenis, html.lenis body { height: auto; }
   100% { transform: translateY(-110vh) translateX(30px) rotate(360deg); opacity: 0; }
 }
 .soda-parallax { transition: transform 0.1s ease-out; }
-.soda-leaf, .soda-berry {
-  position: absolute; outline: none; pointer-events: none;
-  --progress-bar-color: transparent; --poster-color: transparent;
+/* floating glass tiles carrying the stack (soda's floating objects, developer edition) */
+.soda-tile {
+  position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  border-radius: 24%; background: linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -10px 24px rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; will-change: transform;
 }
-.soda-leaf  { filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
-.soda-berry { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
+.soda-tile::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(60% 45% at 50% 0%, rgba(255,255,255,0.35), transparent 70%);
+}
+.soda-tile img { width: 46%; height: 46%; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45)); }
+.soda-tile__label {
+  position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+  font-family: var(--font-galada), "Galada", cursive; font-size: 15px; color: #fbcfe8; opacity: 0.9;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.soda-tile--dim { opacity: 0.55; }
+.soda-tile--dim .soda-tile__label { display: none; }
 .soda-zone {
   --surface:   rgba(255,255,255,0.05);
   --surface-2: rgba(255,255,255,0.10);
