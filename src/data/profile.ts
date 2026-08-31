@@ -551,7 +551,7 @@ export const commitNature = [
 export const timeline = [
   { when: "2026.04 — 현재", what: "ilro · challengers", note: "학원 LMS 플랫폼 + 학생용 통합 앱 — 프론트 모노레포 최다 기여" },
   { when: "2025.10 — 2026.08", what: "Science Circuit Program", note: "적응형 학습 플랫폼 5개 저장소 전 계층" },
-  { when: "2024.09 — 현재", what: "AIDU · Full Stack Developer", note: "Django · Next.js · React Native · AWS" },
+  { when: "2025.10 — 현재", what: "AIDU · Full Stack Developer", note: "Django · Next.js · React Native · AWS" },
   { when: "2024.09", what: "정보처리기사 (필기)", note: "" },
   { when: "2024.06", what: "SQLD", note: "" },
   { when: "2024.03 — 2024.08", what: "소프트웨어인재개발원", note: "개발자 과정 수료" },
